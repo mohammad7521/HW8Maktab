@@ -1,4 +1,4 @@
-package categories;
+package repositories.categories;
 
 import connection.ConnectionProvider;
 import models.Category;
@@ -9,24 +9,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParentCategoryRepo {
+public class ChildCategoryRepo {
 
-    public ParentCategoryRepo() {
+    public ChildCategoryRepo() {
         ConnectionProvider.setConnection();
     }
+
 
 
     //add
     public int add (Category category){
 
         int returnID=0;
-        String insert="INSERT INTO parentCategory (name) VALUES(?) returning id";
+        String insert="INSERT INTO childcategory (name,parentcategoryid) VALUES(?,?) returning id";
 
         PreparedStatement preparedStatement= null;
         try {
             preparedStatement = ConnectionProvider.setConnection().prepareStatement(insert);
 
             preparedStatement.setString(1,category.getName());
+            preparedStatement.setInt(2,category.getParentCategoryID());
 
             ResultSet resultSet=preparedStatement.executeQuery();
 
@@ -43,11 +45,12 @@ public class ParentCategoryRepo {
     }
 
 
+
     //show info
     public Category showInfo(int categoryID){
-        String showInfo="select * from parentcategory where id=?";
+        String showInfo="select * from childCategory where id=?";
 
-        Category category=new Category();
+        Category category=null;
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
             preparedStatement.setInt(1,categoryID);
@@ -56,9 +59,11 @@ public class ParentCategoryRepo {
             while (resultSet.next()){
                 int id=resultSet.getInt(1);
                 String name=resultSet.getString(2);
+                int parentCategoryID=resultSet.getInt(4);
 
                 category.setId(id);
                 category.setName(name);
+                category.setParentCategoryId(parentCategoryID);
             }
 
         } catch (SQLException e) {
@@ -68,11 +73,12 @@ public class ParentCategoryRepo {
     }
 
 
+
     //show info based on category name
     public Category showInfo(String name){
-        String showInfo="select * from parentcategory where name=?";
+        String showInfo="select * from childcategory where name=?";
 
-        Category category=null;
+        Category category=new Category();
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
             preparedStatement.setString(1,name);
@@ -81,10 +87,12 @@ public class ParentCategoryRepo {
             while (resultSet.next()){
                 int id=resultSet.getInt(1);
                 String categoryName=resultSet.getString(2);
+                int productID=resultSet.getInt(3);
+                int parentCategoryID=resultSet.getInt(4);
 
-                category=new Category();
                 category.setId(id);
                 category.setName(categoryName);
+                category.setParentCategoryId(parentCategoryID);
             }
 
         } catch (SQLException e) {
@@ -96,7 +104,7 @@ public class ParentCategoryRepo {
 
     //show all categories
     public List <Category> showAll(){
-        String showInfo="select id,name from parentcategory group by (id,name)";
+        String showInfo="select id,name,parentcategory from childCategory group by (id,name,parentcategoryid)";
 
         List<Category> categoryList=new ArrayList<>();
         try {
@@ -107,9 +115,11 @@ public class ParentCategoryRepo {
 
                 int id=resultSet.getInt(1);
                 String categoryName=resultSet.getString(2);
+                int parentCategoryID=resultSet.getInt(3);
                 Category category=new Category();
                 category.setId(id);
                 category.setName(categoryName);
+                category.setParentCategoryId(parentCategoryID);
                 categoryList.add(category);
             }
 
@@ -117,5 +127,57 @@ public class ParentCategoryRepo {
             e.printStackTrace();
         }
         return categoryList;
+    }
+
+
+
+
+    //show child categories of a parent
+    public List<Category> showCategoriesOfParent(int parentCategoryID){
+        String showInfo="select * from childCategory where parentcategoryid=?";
+
+        List<Category> categoryList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
+            preparedStatement.setInt(1,parentCategoryID);
+            ResultSet resultSet=preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                int id=resultSet.getInt(1);
+                String name=resultSet.getString(2);
+
+                Category category=new Category();
+                category.setId(id);
+                category.setName(name);
+
+                categoryList.add(category);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categoryList;
+    }
+
+
+
+    //add product to a category
+    public boolean addProduct(Category category,int productID){
+
+        int addProductCheck=0;
+        String addProduct="insert into childcategory (name,productid,parentcategoryid) values(?,?,?)";
+
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(addProduct);
+            preparedStatement.setString(1,category.getName());
+            preparedStatement.setInt(2,productID);
+            preparedStatement.setInt(3,category.getParentCategoryID());
+            addProductCheck=preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return addProductCheck>0;
     }
 }

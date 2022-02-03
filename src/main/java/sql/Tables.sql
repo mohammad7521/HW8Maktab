@@ -48,8 +48,7 @@ CREATE TABLE IF NOT EXISTS product(
 
 CREATE TABLE IF NOT EXISTS parentCategory(
     id serial primary key,
-    name varchar(20),
-    productID int
+    name varchar(20)
 );
 
 

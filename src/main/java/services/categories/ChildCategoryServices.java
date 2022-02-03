@@ -1,6 +1,7 @@
-package categories;
+package services.categories;
 
 import models.Category;
+import repositories.categories.ChildCategoryRepo;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class ChildCategoryServices {
     //add product to a category
     public static boolean addProduct(int productID,int categoryID){
         Category category=ChildCategoryServices.showInfo(categoryID);
+        return childCategoryRepo.addProduct(category,productID);
 
     }
 

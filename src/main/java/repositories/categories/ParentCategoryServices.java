@@ -1,4 +1,4 @@
-package categories;
+package repositories.categories;
 
 import models.Category;
 

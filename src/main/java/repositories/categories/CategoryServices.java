@@ -1,4 +1,4 @@
-package categories;
+package repositories.categories;
 
 //public class CategoryServices {
 //

@@ -8,6 +8,7 @@ import services.categories.ParentCategoryServices;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class AdminConsole {
@@ -20,6 +21,7 @@ public class AdminConsole {
             System.out.println();
             System.out.println("1-product management");
             System.out.println("2-user management");
+            System.out.println("3-category management");
             System.out.println("0-exit");
 
             Scanner scanner = new Scanner(System.in);
@@ -35,9 +37,9 @@ public class AdminConsole {
 //                        userManagement();
 //                        break;
 
-//                    case 3:
-//                        categoryManagement();
-//                        break;
+                    case 3:
+                        categoryManagement();
+                        break;
 
                     case 0:
                         flag = false;
@@ -211,76 +213,61 @@ public class AdminConsole {
 //        }
 //    }
 
-//
-//    public static void categoryManagement() {
-//
-//        boolean flag=true;
-//        while (flag) {
-//            System.out.println();
-//            System.out.println("1-Add new category");
-//            System.out.println("2-remove a category");
-//            System.out.println("3-modify a modify");
-//            System.out.println("0-exit");
-//
-//            Scanner scanner = new Scanner(System.in);
-//
-//            try {
-//                int userSelect = scanner.nextInt();
-//                scanner.nextLine();
-//                switch (userSelect) {
-//
-//                    case 1:
-//                        System.out.println("enter new category name");
-//                        String categoryName = scanner.next();
-//                        System.out.println("select the parent category by id:");
-//                        List<Category> categoryList=CategoryServices.showAll();
-//
-//                        for (Category category:categoryList){
-//                            System.out.println(category);
-//                        }
-//                        int parentCategoryID=scanner.nextInt();
-//                        Category category=new Category(categoryName,CategoryServices.showInfo(parentCategoryID));
-//
-//                        if (CategoryServices.add(category)) {
-//                            System.out.println("category added successfully! ");
-//                        }
-//                        break;
-//
-//                    case 2:
-//                        while (true) {
-//                            System.out.println("enter the desired category ID");
-//                            int branchID = scanner.nextInt();
-//                            if (BranchService.remove(branchID)) {
-//                                System.out.println("branch has been removed successfully! ");
-//                                break;
-//                            } else System.out.println("branch ID does not exist! ");
-//                            break;
-//                        }
-//                        break;
-//
-//                    case 3:
-//                        while (true) {
-//                            System.out.println("enter the desired branch ID");
-//                            int branchID = scanner.nextInt();
-//                            scanner.nextLine();
-//                            System.out.println("enter new name:");
-//                            String newName = scanner.nextLine();
-//                            System.out.println("enter new address:");
-//                            String branchAddress = scanner.next();
-//
-//                            if (BranchService.modify(branchID, newName, branchAddress)) {
-//                                System.out.println("branch has been modified successfully! ");
-//                            } else System.out.println("branch ID does not exist! ");
-//                            break;
-//                        }
-//                    case 0:
-//                        flag = false;
-//                        break;
-//
-//                }
-//            }catch (InputMismatchException e){
-//                System.out.println("please enter a valid number !");
-//            }
-//        }
-//    }
+
+    public static void categoryManagement() {
+
+        boolean flag=true;
+        while (flag) {
+            System.out.println();
+            System.out.println("1-Add new category");
+            System.out.println("2-remove a category");
+            System.out.println("3-modify a modify");
+            System.out.println("0-exit");
+
+            Scanner scanner = new Scanner(System.in);
+
+            try {
+                int userSelect = scanner.nextInt();
+                scanner.nextLine();
+                switch (userSelect) {
+
+                    case 1:
+                        System.out.println("is it a main category?");
+                        char answer=scanner.next().charAt(0);
+                        if (answer=='y' || answer=='Y'){
+
+                            System.out.println("enter name:");
+                            String categoryName=scanner.next();
+                            Category category=new Category();
+                            category.setName(categoryName);;
+                            ParentCategoryServices.add(category);
+
+                        }else {
+                            System.out.println("select the parent category: ");
+                            List<Category> categoryList=ParentCategoryServices.showAll();
+                            for (Category category:categoryList){
+                                System.out.println(category.toString());
+                            }
+                            scanner.nextLine();
+                            int parentCategoryID=scanner.nextInt();
+                            System.out.println("enter name: ");
+                            Category category=new Category();
+                            category.setParentCategory(ParentCategoryServices.showInfo(parentCategoryID));
+                            category.setParentCategoryId(parentCategoryID);
+                            category.setName(scanner.next());
+                            ChildCategoryServices.add(category);
+                        }
+
+                        break;
+
+                    case 0:
+                        flag = false;
+                        break;
+
+                }
+            }catch (InputMismatchException e){
+                System.out.println("please enter a valid number !");
+            }
+        }
+    }
 }

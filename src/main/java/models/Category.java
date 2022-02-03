@@ -52,11 +52,11 @@ public class Category {
     }
 
     public void setParentCategoryId(int id){
-        this.parentCategory.setParentCategoryId(id);
+        this.parentCategory.setId(id);
     }
 
     public int getParentCategoryID(){
-        return this.parentCategory.getParentCategoryID();
+        return this.parentCategory.getId();
     }
 
 

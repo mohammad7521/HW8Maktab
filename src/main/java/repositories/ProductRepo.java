@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class ProductRepo {
 
     public ProductRepo() {
-        ConnectionProvider.setConnection();
+            ConnectionProvider.setConnection();
     }
 
 
