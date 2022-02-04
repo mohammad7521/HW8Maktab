@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductRepo {
+public class ProductRepo implements BaseRepository <Product> {
 
     public ProductRepo() {
             ConnectionProvider.setConnection();
@@ -70,6 +70,7 @@ public class ProductRepo {
 
         return addedProduct;
     }
+
 
 
 

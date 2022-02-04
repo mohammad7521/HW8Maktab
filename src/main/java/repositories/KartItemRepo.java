@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KartItemRepo {
+public class KartItemRepo  {
 
 
     //add new kart item
@@ -36,7 +36,6 @@ public class KartItemRepo {
 
 
         //remove a kart item
-
     public boolean remove(int productID,int orderID){
 
         int removeCheck = 0;
@@ -82,4 +81,6 @@ public class KartItemRepo {
         }
         return kartItemList;
     }
+
+
 }

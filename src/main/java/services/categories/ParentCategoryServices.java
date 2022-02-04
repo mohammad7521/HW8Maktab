@@ -1,18 +1,20 @@
 package services.categories;
 
 import models.Category;
+import repositories.BaseRepository;
 import repositories.categories.ParentCategoryRepo;
+import services.BaseServices;
 
 import java.util.List;
 
-public class ParentCategoryServices {
+public class ParentCategoryServices implements BaseServices<Category> {
 
     private static ParentCategoryRepo parentCategoryRepo=new ParentCategoryRepo();
 
 
 
     //add new category
-    public static int add(Category category){
+    public int add(Category category){
         return parentCategoryRepo.add(category);
     }
 

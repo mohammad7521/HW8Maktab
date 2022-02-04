@@ -1,23 +1,16 @@
 package repositories;
 import models.Models;
 
-public interface BaseRepository<T extends Models> {
-
-    //show info
-    public T showAll(T t);
-
-
+public interface BaseRepository<T> {
 
     //add
-    public boolean add(T t);
+    public int add(T t);
 
 
-    //update
-    public boolean update(T t);
+    //show info
+    public T showInfo(int id);
 
 
-    //remove
-    public boolean remove(T t);
 
 
 }

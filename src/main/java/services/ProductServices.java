@@ -5,7 +5,7 @@ import repositories.ProductRepo;
 
 import java.util.List;
 
-public class ProductServices {
+public class ProductServices implements BaseServices<Product> {
 
 
     private static ProductRepo productRepo=new ProductRepo();
@@ -18,7 +18,7 @@ public class ProductServices {
 
 
     //add new product
-    public static int add(Product product){
+    public int add(Product product){
         return productRepo.add(product);
     }
 

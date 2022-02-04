@@ -5,16 +5,14 @@ import exceptionHandlers.UserNotFound;
 import models.Customer;
 import repositories.CustomerRepo;
 
-public class CustomerServices {
+public class CustomerServices implements  BaseServices<Customer>{
 
-    public static CustomerRepo customerRepo=new CustomerRepo();
+    public  static CustomerRepo customerRepo=new CustomerRepo();
 
     //add new customer
-    public static void addNew(String username,String password,String address,
-                              String phoneNumber,String nationalCode) {
+    public int add(Customer customer) {
 
-        Customer customer=new Customer();
-
+        String username=customer.getUsername();
         try {
             if (CustomerServices.showInfo(username).getUsername().equals(username)) {
                 throw new DuplicateUser("username already exists");
@@ -24,14 +22,9 @@ public class CustomerServices {
             System.out.println("username is free!");
             System.out.println();
         }
-        customer.setUsername(username);
-        customer.setPassword(password);
-        customer.setAddress(address);
-        customer.setPhoneNumber(phoneNumber);
-        customer.setNationalCode(nationalCode);
 
-        customerRepo.add(customer);
         System.out.println("user created successfully");
+        return customerRepo.add(customer);
 
     }
 //

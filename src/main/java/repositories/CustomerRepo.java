@@ -7,17 +7,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CustomerRepo  {
+public class CustomerRepo implements BaseRepository <Customer> {
 
     public CustomerRepo() {
         ConnectionProvider.setConnection();
     }
 
     //add
-    public boolean add(Customer customer) {
-        int insertCheck = 0;
+    public int add(Customer customer) {
+        int insertedID=0;
         try {
-            String insert = "insert into customer(username,password,address,phonenumber,nationalcode) values (?,?,?,?,?)";
+            String insert = "insert into customer(username,password,address,phonenumber,nationalcode) values (?,?,?,?,?)" +
+                    "returning id";
             PreparedStatement preparedStatement = ConnectionProvider.setConnection().prepareStatement(insert);
             preparedStatement.setString(1, customer.getUsername());
             preparedStatement.setString(2, customer.getPassword());
@@ -25,7 +26,7 @@ public class CustomerRepo  {
             preparedStatement.setString(4, customer.getPhoneNumber());
             preparedStatement.setString(5, customer.getNationalCode());
 
-            insertCheck = preparedStatement.executeUpdate();
+            insertedID = preparedStatement.executeUpdate();
 
             preparedStatement.close();
 
@@ -34,7 +35,7 @@ public class CustomerRepo  {
             e.printStackTrace();
 
         }
-        return insertCheck > 0;
+        return insertedID;
     }
 
 

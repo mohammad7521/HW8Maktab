@@ -11,16 +11,13 @@ import services.OrderServices;
 import services.ProductServices;
 import services.categories.ChildCategoryServices;
 import services.categories.ParentCategoryServices;
-
-import java.sql.Array;
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class CustomerConsole {
 
+    public static CustomerServices customerServices=new CustomerServices();
     public static void customerLogInMenu() {
 
         boolean flag = true;
@@ -45,8 +42,9 @@ public class CustomerConsole {
                         String phoneNumber=scanner.next();
                         System.out.println("enter your national code:");
                         String nationalCode=scanner.next();
+                        Customer customer=new Customer(username,password,address,phoneNumber,nationalCode);
                         try {
-                            CustomerServices.addNew(username,password,address,phoneNumber,nationalCode);
+                            customerServices.add(customer);
                         }catch (DuplicateUser e){
                             System.out.println("username already exists! ");
                         }

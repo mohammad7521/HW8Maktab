@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderRepo  {
+public class OrderRepo {
 
     public OrderRepo() {
         ConnectionProvider.setConnection();
@@ -22,7 +22,6 @@ public class OrderRepo  {
 
     //add new order
     public int addOrder(int customerID){
-
         String addOrder="insert into customerorder(customerid,ispaid) values(?,false) returning id";
 
         int orderID=0;

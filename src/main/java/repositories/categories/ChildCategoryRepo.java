@@ -3,6 +3,7 @@ package repositories.categories;
 import connection.ConnectionProvider;
 import models.Category;
 import models.Product;
+import repositories.BaseRepository;
 import services.categories.ParentCategoryServices;
 
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChildCategoryRepo {
+public class ChildCategoryRepo implements BaseRepository<Category> {
 
     public ChildCategoryRepo() {
         ConnectionProvider.setConnection();

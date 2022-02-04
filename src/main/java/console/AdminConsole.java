@@ -13,7 +13,9 @@ import java.util.Scanner;
 
 public class AdminConsole {
 
-
+public static ProductServices productServices=new ProductServices();
+public static ChildCategoryServices childCategoryServices=new ChildCategoryServices();
+public static ParentCategoryServices parentCategoryServices=new ParentCategoryServices();
     public static void adminMenu()  {
 
         boolean flag=true;
@@ -98,7 +100,7 @@ public class AdminConsole {
                         Product product=new Product(productName,category,price,quantity);
 
                         //adding product to the table
-                        int productID=ProductServices.add(product);
+                        int productID=productServices.add(product);
                         if (productID>0 && ChildCategoryServices.addProduct(productID,product.getCategory().getId())) {
                             System.out.println("product added successfully");
                         }
@@ -222,7 +224,7 @@ public class AdminConsole {
                             String categoryName=scanner.next();
                             Category category=new Category();
                             category.setName(categoryName);;
-                            ParentCategoryServices.add(category);
+                            parentCategoryServices.add(category);
 
                         }else {
                             System.out.println("select the parent category: ");
@@ -237,7 +239,7 @@ public class AdminConsole {
                             category.setParentCategory(ParentCategoryServices.showInfo(parentCategoryID));
                             category.setParentCategoryId(parentCategoryID);
                             category.setName(scanner.next());
-                            ChildCategoryServices.add(category);
+                            childCategoryServices.add(category);
                         }
 
                         break;
