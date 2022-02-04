@@ -92,6 +92,25 @@ public class ProductRepo {
 
 
 
+    //change product quantity (deduct)
+    public boolean deduct(int productID,int quantity){
+        String modify="update product set quantity=quantity-(?) where id=?";
+
+        int updateCheck=0;
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(modify);
+            preparedStatement.setInt(1,quantity);
+            preparedStatement.setInt(2,productID);
+
+            updateCheck=preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return updateCheck>0;
+    }
+
+
+
 
     //show info of a product
     public Product showInfo(int productID){
@@ -127,8 +146,6 @@ public class ProductRepo {
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showAll);
             ResultSet resultSet=preparedStatement.executeQuery();
-            preparedStatement.close();
-
             while (resultSet.next()){
                 Product product=new Product();
 
@@ -139,9 +156,11 @@ public class ProductRepo {
 
                 productList.add(product);
             }
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return productList;
     }
 }

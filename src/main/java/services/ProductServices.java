@@ -53,6 +53,13 @@ public class ProductServices {
     }
 
 
+    //deduct from a product
+    public static boolean deduct (int productID,int quantity){
+
+        return productRepo.deduct(productID,quantity);
+    }
+
+
     //show all products
     public static List<Product> showAll(){
         return productRepo.showAll();

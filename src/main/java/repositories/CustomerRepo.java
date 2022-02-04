@@ -44,7 +44,7 @@ public class CustomerRepo  {
     public Customer showInfo(int customerID){
         String showInfo="select * from customer where id=?";
 
-        Customer customer=null;
+        Customer customer=new Customer();
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
             preparedStatement.setInt(1,customerID);
@@ -72,9 +72,9 @@ public class CustomerRepo  {
 
     //show info of a customer
     public Customer showInfo(String username){
-        String showInfo="select * from customer where id=?";
+        String showInfo="select * from customer where username=?";
 
-        Customer customer=null;
+        Customer customer=new Customer();
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
             preparedStatement.setString(1,username);
@@ -82,15 +82,16 @@ public class CustomerRepo  {
 
             while (resultSet.next()){
 
-                int id=resultSet.getInt(1);
-                String userName=resultSet.getString(2);
-                String password=resultSet.getString(3);
+                String userName=resultSet.getString(1);
+                String password=resultSet.getString(2);
+                int id=resultSet.getInt(3);
                 String address=resultSet.getString(4);
                 String phoneNumber=resultSet.getString(5);
                 String nationalCode=resultSet.getString(6);
                 int balance=resultSet.getInt(7);
 
                 customer=new Customer(userName,password,address,phoneNumber,nationalCode,balance);
+                customer.setId(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();

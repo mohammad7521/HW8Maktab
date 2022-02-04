@@ -3,8 +3,11 @@ package console;
 
 import exceptionHandlers.DuplicateUser;
 import models.Customer;
+import models.Order;
 import models.Product;
 import services.CustomerServices;
+import services.KartItemServices;
+import services.OrderServices;
 import services.ProductServices;
 
 import java.sql.Array;
@@ -78,7 +81,6 @@ public class CustomerConsole {
         while (true) {
             System.out.println("1-show all products: ");
             System.out.println("2-show shopping kart: ");
-            System.out.println("3-select tickets by date: ");
             System.out.println("0-Log out");
 
             Scanner scanner = new Scanner(System.in);
@@ -90,8 +92,30 @@ public class CustomerConsole {
                         List<Product> productList=ProductServices.showAll();
 
                         for(Product product:productList){
-                            product.toString();
+                            System.out.println(product.toString());
                         }
+                        int orderID;
+                        System.out.println("enter the product id:");
+                        if(OrderServices.showOrdersCustomer(customer.getId())==null) {
+                            orderID=OrderServices.add(customer.getId());
+                        }else {
+                            orderID=OrderServices.showOrdersCustomer(customer.getId()).getId();
+                        }
+
+                        int productID=scanner.nextInt();
+                        System.out.println("enter quantity: ");
+                        int quantity=scanner.nextInt();
+
+                        if (ProductServices.showInfo(productID).getQuantity()>=quantity){
+                            if (KartItemServices.add(productID,orderID,quantity) && ProductServices.deduct(productID,quantity)){
+                                System.out.println("item has been added to your shopping kart! ");
+                                break;
+                            }
+
+                        }else {
+                            System.out.println("out of stock! ");
+                        }
+
                         break;
                 }
             } catch (InputMismatchException e) {
