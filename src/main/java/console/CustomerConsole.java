@@ -2,6 +2,7 @@ package console;
 
 
 import exceptionHandlers.DuplicateUser;
+import exceptionHandlers.NationalCodeLength;
 import exceptionHandlers.NoOrders;
 import exceptionHandlers.UserNotFound;
 import models.*;
@@ -47,6 +48,9 @@ public class CustomerConsole {
                             customerServices.add(customer);
                         }catch (DuplicateUser e){
                             System.out.println("username already exists! ");
+                        }
+                        catch (NationalCodeLength e){
+                            System.out.println("national code is not long enough!");
                         }
                         break;
                     case 2:
@@ -121,14 +125,18 @@ public class CustomerConsole {
                         System.out.println("enter quantity: ");
                         int quantity=scanner.nextInt();
 
-                        if (ProductServices.showInfo(productID).getQuantity()>=quantity){
-                            if (KartItemServices.add(productID,orderID,quantity) && ProductServices.deduct(productID,quantity)){
-                                System.out.println("item has been added to your shopping kart! ");
-                                break;
-                            }
+                        try {
+                            if (ProductServices.showInfo(productID).getQuantity() >= quantity) {
+                                if (KartItemServices.add(productID, customer.getId(), quantity) && ProductServices.deduct(productID, quantity)) {
+                                    System.out.println("item has been added to your shopping kart! ");
+                                    break;
+                                }
 
-                        }else {
-                            System.out.println("out of stock! ");
+                            } else {
+                                System.out.println("out of stock! ");
+                            }
+                        }catch (NullPointerException e){
+                            System.out.println("item does not exist! ");
                         }
 
                         break;
@@ -140,39 +148,57 @@ public class CustomerConsole {
                         for (Category p:parentCategories){
                             System.out.println(p.toString());
                         }
-
                         int selectedParent=scanner.nextInt();
 
-                        List<Category> childCategories=ChildCategoryServices.showCategoriesOfParent(selectedParent);
-
-                        for (Category c:childCategories){
-                            System.out.println(c.toString());
+                        if (ParentCategoryServices.showInfo(selectedParent).getId()!=selectedParent){
+                            System.out.println("selected category does not exist!");
+                            break;
                         }
-
-                        System.out.println("select category: ");
-                        int selectedChild=scanner.nextInt();
-
-                        productList=ChildCategoryServices.showProducts(selectedChild);
-
-                        for (Product p:productList){
-                            System.out.println(p.toString());
+                        if (ChildCategoryServices.showCategoriesOfParent(selectedParent).size()<1){
+                            System.out.println("please select another category!");
+                            break;
                         }
+                            List<Category> childCategories = ChildCategoryServices.showCategoriesOfParent(selectedParent);
 
-
-                        System.out.println("enter the product id:");
-                        productID=scanner.nextInt();
-                        System.out.println("enter quantity: ");
-                        quantity=scanner.nextInt();
-
-                        if (ProductServices.showInfo(productID).getQuantity()>=quantity){
-                            if (KartItemServices.add(productID,orderID,quantity) && ProductServices.deduct(productID,quantity)){
-                                System.out.println("item has been added to your shopping kart! ");
-                                break;
+                            for (Category c : childCategories) {
+                                System.out.println(c.toString());
                             }
 
-                        }else {
-                            System.out.println("out of stock! ");
-                        }
+                            System.out.println("select category by id: ");
+                            int selectedChild = scanner.nextInt();
+
+                            if (ChildCategoryServices.showInfo(selectedChild).getId()!=selectedChild){
+                                System.out.println("selected category id does not exist!");
+                                break;
+                            }
+                            productList = ChildCategoryServices.showProducts(selectedChild);
+
+                            for (Product p : productList) {
+                                System.out.println(p.toString());
+                            }
+
+
+                            System.out.println("enter the product id:");
+                            productID = scanner.nextInt();
+                            System.out.println("enter quantity: ");
+                            quantity = scanner.nextInt();
+
+                            try {
+                                if (ProductServices.showInfo(productID).getQuantity() >= quantity) {
+                                    if (KartItemServices.add(productID, customer.getId(), quantity) && ProductServices.deduct(productID, quantity)) {
+                                        System.out.println("item has been added to your shopping kart! ");
+                                        break;
+                                    }
+
+                                } else {
+                                    System.out.println("out of stock! ");
+                                    break;
+                                }
+                            }catch (NullPointerException e){
+                                System.out.println("product does not exist!");
+                                System.out.println();
+                                break;
+                            }
                     case 4:
                         orderID=OrderServices.lastCustomerOrder(customer.getId()).getId();
                     List<KartItem> kartItemList=KartItemServices.showKartItems(orderID);
@@ -183,7 +209,13 @@ public class CustomerConsole {
                         System.out.println("total price:");
                         int totalOrderPrice=OrderServices.totalOrderPrice(OrderServices.lastCustomerOrder(customer.getId()).getId());
                         System.out.println(totalOrderPrice);
-                        System.out.println("finalize (Y/N)");
+                        if (totalOrderPrice>customer.getBalance()) {
+                            System.out.println("not enough balance!");
+                            System.out.println("please recharge!");
+                            System.out.println();
+                            break;
+                        }
+                        System.out.println("finalize (y for yes enter any other for no!)");
                         char finalize=scanner.next().charAt(0);
                         if (finalize=='y' || finalize=='Y'){
                             if(CustomerServices.deduct(totalOrderPrice,customer.getId())&&
@@ -193,7 +225,11 @@ public class CustomerConsole {
                             }
                         }
                     }
+
+                    case 0:
+                        break;
                 }
+
             }catch (InputMismatchException e) {
                 System.out.println("pleas enter a valid number");
         }

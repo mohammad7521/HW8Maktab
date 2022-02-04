@@ -76,10 +76,16 @@ public static ParentCategoryServices parentCategoryServices=new ParentCategorySe
                         int quantity=scanner.nextInt();
 
                         //selecting the category
+                        List<Category> categoryList= ParentCategoryServices.showAll();
+
+                        if (categoryList.size()<1){
+                            System.out.println("no categories defined! please define categories from the menu");
+                            break;
+                        }
+                        else
                         System.out.println("select the category by id:");
 
                         //select the parent category for product
-                        List<Category> categoryList= ParentCategoryServices.showAll();
 
                         for (Category c:categoryList){
                             System.out.println(c.toString());
@@ -87,7 +93,12 @@ public static ParentCategoryServices parentCategoryServices=new ParentCategorySe
                         int parentCategoryID=scanner.nextInt();
                         //select the child category
 
-                        List<Category> childCategoryList=ChildCategoryServices.showCategoriesOfParent(parentCategoryID);
+                        List<Category> childCategoryList=childCategoryServices.showCategoriesOfParent(parentCategoryID);
+                        if (childCategoryList.size()<1){
+                            System.out.println("no child category has been defined! please define from the menu!");
+                            break;
+                        }
+                        else
                         for (Category c:childCategoryList) {
                             System.out.println(c.toString());
                         }
@@ -111,7 +122,7 @@ public static ParentCategoryServices parentCategoryServices=new ParentCategorySe
                             System.out.println("enter the desired product ID");
                             productID = scanner.nextInt();
                             scanner.nextLine();
-                            System.out.println("enter new quantity:");
+                            System.out.println("enter added quantity:");
                             quantity = scanner.nextInt();
                             if (ProductServices.recharge(productID,quantity)) {
                                 System.out.println("product has been recharged successfully! ");
@@ -130,82 +141,13 @@ public static ParentCategoryServices parentCategoryServices=new ParentCategorySe
 
 
 
-
-
-
-//
-//    public static void userManagement() {
-//
-//        boolean flag = true;
-//        while (flag) {
-//            System.out.println();
-//            System.out.println("1-Add new user");
-//            System.out.println("2-remove a user");
-//            System.out.println("3-modify a branch Boss");
-//            System.out.println("0-exit");
-//
-//            Scanner scanner = new Scanner(System.in);
-//
-//            try {
-//                int userSelect = scanner.nextInt();
-//                scanner.nextLine();
-//                switch (userSelect) {
-//
-//                    case 1:
-//                        System.out.println("enter first name:");
-//                        String firstName = scanner.next();
-//                        System.out.println("enter last name:");
-//                        String lastName = scanner.next();
-//                        System.out.println("enter address:");
-//                        String address = scanner.next();
-//                        System.out.println("enter working branch ID:");
-//                        int branchId = scanner.nextInt();
-//                        scanner.nextLine();
-//                        BossService.addNew(firstName, lastName, address, branchId);
-//                        break;
-//
-//                    case 2:
-//                        System.out.println("enter the desired branch boss ID");
-//                        int bossID = scanner.nextInt();
-//                        if (BossService.remove(bossID)) {
-//                            System.out.println("branch Boss removed successfully! ");
-//                            break;
-//                        } else System.out.println("branch boss ID does not exist! ");
-//                        break;
-//                    case 3:
-//
-//                        System.out.println("enter the desired branch boss ID");
-//                        int ID = scanner.nextInt();
-//                        scanner.nextLine();
-//                        System.out.println("enter new first name:");
-//                        String newName = scanner.nextLine();
-//                        System.out.println("enter new last name:");
-//                        String newLastName = scanner.next();
-//                        System.out.println("enter new address:");
-//                        String newAddress = scanner.next();
-//                        BossService.modify(ID, newName, newLastName, newAddress);
-//
-//                        break;
-//
-//                    case 0:
-//                        flag = false;
-//                        break;
-//                }
-//            } catch (InputMismatchException e) {
-//                System.out.println("please enter a valid number ! ");
-//            }
-//        }
-//    }
-
-
     public static void categoryManagement() {
 
         boolean flag=true;
         while (flag) {
             System.out.println();
             System.out.println("1-Add new category");
-            System.out.println("2-remove a category");
-            System.out.println("3-modify a modify");
+            System.out.println("2-modify a category");
             System.out.println("0-exit");
 
             Scanner scanner = new Scanner(System.in);
@@ -216,7 +158,7 @@ public static ParentCategoryServices parentCategoryServices=new ParentCategorySe
                 switch (userSelect) {
 
                     case 1:
-                        System.out.println("is it a main category?");
+                        System.out.println("is it a main category?(enter y for yes or any other for no)");
                         char answer=scanner.next().charAt(0);
                         if (answer=='y' || answer=='Y'){
 
@@ -224,7 +166,9 @@ public static ParentCategoryServices parentCategoryServices=new ParentCategorySe
                             String categoryName=scanner.next();
                             Category category=new Category();
                             category.setName(categoryName);;
-                            parentCategoryServices.add(category);
+                            if (parentCategoryServices.add(category)>0){
+                                System.out.println("category created successfully");
+                            }
 
                         }else {
                             System.out.println("select the parent category: ");
@@ -239,7 +183,9 @@ public static ParentCategoryServices parentCategoryServices=new ParentCategorySe
                             category.setParentCategory(ParentCategoryServices.showInfo(parentCategoryID));
                             category.setParentCategoryId(parentCategoryID);
                             category.setName(scanner.next());
-                            childCategoryServices.add(category);
+                            if (childCategoryServices.add(category)>0){
+                                System.out.println("category has been added successfully!");
+                            }
                         }
 
                         break;

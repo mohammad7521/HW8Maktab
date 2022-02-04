@@ -193,7 +193,7 @@ public class ChildCategoryRepo implements BaseRepository<Category> {
 
         List<Product> productList=new ArrayList<>();
         String showProducts="\n" +
-                "select productID,p.name,price from childCategory inner join product p on childCategory.productID = p.id\n" +
+                "select productID,p.name,price,quantity from childCategory inner join product p on childCategory.productID = p.id\n" +
                 "where childCategory.id=?";
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showProducts);
@@ -205,6 +205,7 @@ public class ChildCategoryRepo implements BaseRepository<Category> {
                 product.setId(resultSet.getInt(1));
                 product.setName(resultSet.getString(2));
                 product.setPrice(resultSet.getDouble(3));
+                product.setQuantity(resultSet.getInt(4));
                 productList.add(product);
             }
         } catch (SQLException e) {

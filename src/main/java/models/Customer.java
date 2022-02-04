@@ -21,6 +21,19 @@ public class Customer extends User {
         this.nationalCode = nationalCode;
     }
 
+    public Customer(String username,String password,String address,
+                    String phoneNumber, String nationalCode,double balance) {
+
+        setUsername(username);
+        setPassword(password);
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.nationalCode = nationalCode;
+        this.balance=balance;
+    }
+
+
+
     public Customer() {
     }
 

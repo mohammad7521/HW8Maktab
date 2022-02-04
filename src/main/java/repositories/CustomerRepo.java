@@ -17,7 +17,7 @@ public class CustomerRepo implements BaseRepository <Customer> {
     public int add(Customer customer) {
         int insertedID=0;
         try {
-            String insert = "insert into customer(username,password,address,phonenumber,nationalcode) values (?,?,?,?,?)" +
+            String insert = "insert into customer(username,password,address,phonenumber,nationalcode,balance) values (?,?,?,?,?,0)" +
                     "returning id";
             PreparedStatement preparedStatement = ConnectionProvider.setConnection().prepareStatement(insert);
             preparedStatement.setString(1, customer.getUsername());
@@ -26,7 +26,11 @@ public class CustomerRepo implements BaseRepository <Customer> {
             preparedStatement.setString(4, customer.getPhoneNumber());
             preparedStatement.setString(5, customer.getNationalCode());
 
-            insertedID = preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                insertedID=resultSet.getInt(1);
+            }
 
             preparedStatement.close();
 
@@ -45,7 +49,7 @@ public class CustomerRepo implements BaseRepository <Customer> {
     public Customer showInfo(int customerID){
         String showInfo="select * from customer where id=?";
 
-        Customer customer=new Customer();
+        Customer customer=null;
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
             preparedStatement.setInt(1,customerID);
@@ -62,6 +66,7 @@ public class CustomerRepo implements BaseRepository <Customer> {
                 int balance=resultSet.getInt(7);
 
                 customer=new Customer(username,password,address,phoneNumber,nationalCode,balance);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();

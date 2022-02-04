@@ -1,6 +1,7 @@
 package services;
 
 import exceptionHandlers.DuplicateUser;
+import exceptionHandlers.NationalCodeLength;
 import exceptionHandlers.UserNotFound;
 import models.Customer;
 import repositories.CustomerRepo;
@@ -23,6 +24,11 @@ public class CustomerServices implements  BaseServices<Customer>{
             System.out.println();
         }
 
+        if (customer.getNationalCode().length()<10){
+            throw new NationalCodeLength(){
+            };
+        }
+        else
         System.out.println("user created successfully");
         return customerRepo.add(customer);
 
