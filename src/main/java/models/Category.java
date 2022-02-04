@@ -63,7 +63,6 @@ public class Category {
     @Override
     public String toString() {
         return "\nid: " + id +
-                "\nname: " + name +
-                "\nparentCategory: " + parentCategory;
+                "\nname: " + name;
     }
 }

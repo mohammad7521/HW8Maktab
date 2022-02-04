@@ -2,6 +2,7 @@ package repositories.categories;
 
 import connection.ConnectionProvider;
 import models.Category;
+import services.categories.ParentCategoryServices;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,7 +51,7 @@ public class ChildCategoryRepo {
     public Category showInfo(int categoryID){
         String showInfo="select * from childCategory where id=?";
 
-        Category category=null;
+        Category category=new Category();
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
             preparedStatement.setInt(1,categoryID);
@@ -63,6 +64,7 @@ public class ChildCategoryRepo {
 
                 category.setId(id);
                 category.setName(name);
+                category.setParentCategory(ParentCategoryServices.showInfo(parentCategoryID));
                 category.setParentCategoryId(parentCategoryID);
             }
 

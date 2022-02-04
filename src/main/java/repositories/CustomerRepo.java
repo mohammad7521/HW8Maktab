@@ -68,4 +68,34 @@ public class CustomerRepo  {
         return customer;
     }
 
+
+
+    //show info of a customer
+    public Customer showInfo(String username){
+        String showInfo="select * from customer where id=?";
+
+        Customer customer=null;
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showInfo);
+            preparedStatement.setString(1,username);
+            ResultSet resultSet=preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+
+                int id=resultSet.getInt(1);
+                String userName=resultSet.getString(2);
+                String password=resultSet.getString(3);
+                String address=resultSet.getString(4);
+                String phoneNumber=resultSet.getString(5);
+                String nationalCode=resultSet.getString(6);
+                int balance=resultSet.getInt(7);
+
+                customer=new Customer(userName,password,address,phoneNumber,nationalCode,balance);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
 }

@@ -19,9 +19,9 @@ public class MainConsole {
                     case 1:
                         AdminConsole.adminMenu();
                         break;
-//                    case 2:
-//                        CustomerConsole.clientMenu();
-//                        break;
+                    case 2:
+                        CustomerConsole.customerLogInMenu();
+                        break;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("please enter a valid number!");

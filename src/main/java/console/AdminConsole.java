@@ -60,9 +60,7 @@ public class AdminConsole {
         while (flag) {
             System.out.println();
             System.out.println("1-Add new product");
-            System.out.println("2-remove a product");
-            System.out.println("3-modify a product");
-            System.out.println("4-recharge a product");
+            System.out.println("2-recharge a product");
             System.out.println("0-exit");
 
             Scanner scanner = new Scanner(System.in);
@@ -96,6 +94,7 @@ public class AdminConsole {
                         for (Category c:childCategoryList) {
                             System.out.println(c.toString());
                         }
+                        System.out.println();
                         System.out.println("select the child category by id:");
                         int childCategoryID=scanner.nextInt();
                         Category category=ChildCategoryServices.showInfo(childCategoryID);
@@ -110,27 +109,15 @@ public class AdminConsole {
                         }
                         break;
 
-                    case 2:
-                        System.out.println("enter the desired product ID");
-                        productID = scanner.nextInt();
-                        if (productServices.delete(productID)) {
-                            System.out.println("product has been deleted successfully! ");
-                            break;
-                        } else System.out.println("product ID does not exist! ");
-                        break;
 
-                    case 3:
+                    case 2:
                             System.out.println("enter the desired product ID");
                             productID = scanner.nextInt();
                             scanner.nextLine();
-                            System.out.println("enter new name:");
-                            String newName = scanner.nextLine();
-                            System.out.println("enter new price:");
-                            int newPrice=scanner.nextInt();
                             System.out.println("enter new quantity:");
-                            quantity=scanner.nextInt();
-                            if (productServices.modify(productID,newName,newPrice,quantity)) {
-                                System.out.println("product has been modified successfully! ");
+                            quantity = scanner.nextInt();
+                            if (ProductServices.recharge(productID,quantity)) {
+                                System.out.println("product has been recharged successfully! ");
                             } else System.out.println("product ID does not exist! ");
                             break;
                     case 0:

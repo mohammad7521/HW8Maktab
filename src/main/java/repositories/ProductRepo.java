@@ -6,6 +6,8 @@ import models.Product;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductRepo {
 
@@ -71,17 +73,15 @@ public class ProductRepo {
 
 
 
-    //change product information
-    public boolean modify(int productID,String name,int price,int quantity){
-        String modify="update product set name=?,price=?,quantity=? where id=?";
+    //change product quantity (recharge)
+    public boolean recharge(int productID,int quantity){
+        String modify="update product set quantity=quantity+(?) where id=?";
 
         int updateCheck=0;
         try {
             PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(modify);
-            preparedStatement.setString(1,name);
-            preparedStatement.setInt(2,price);
-            preparedStatement.setInt(3,quantity);
-            preparedStatement.setInt(4,productID);
+            preparedStatement.setInt(1,quantity);
+            preparedStatement.setInt(2,productID);
 
             updateCheck=preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -115,5 +115,33 @@ public class ProductRepo {
             e.printStackTrace();
         }
         return product;
+    }
+
+
+
+    //show all products
+    public  List<Product> showAll(){
+        String showAll="select * from product";
+
+        List<Product> productList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showAll);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            preparedStatement.close();
+
+            while (resultSet.next()){
+                Product product=new Product();
+
+                product.setId(resultSet.getInt(1));
+                product.setName(resultSet.getString(2));
+                product.setPrice(resultSet.getInt(3));
+                product.setQuantity(resultSet.getInt(4));
+
+                productList.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productList;
     }
 }

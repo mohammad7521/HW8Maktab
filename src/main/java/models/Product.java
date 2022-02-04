@@ -22,6 +22,9 @@ public class Product extends Models {
         this.quantity = quantity;
     }
 
+    public Product() {
+    }
+
     public int getId() {
         return id;
     }
@@ -60,5 +63,14 @@ public class Product extends Models {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+
+    @Override
+    public String toString() {
+        return  "\nid=" + id +
+                "\nname='" + name +
+                "\nprice=" + price +
+                "\nquantity=" + quantity;
     }
 }
