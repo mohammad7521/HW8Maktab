@@ -1,11 +1,14 @@
 package services;
 
+import exceptionHandlers.NoOrders;
 import models.Order;
 import repositories.OrderRepo;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class OrderServices {
 
@@ -36,9 +39,31 @@ public class OrderServices {
 
 
 
-    //show orders of a customer
-    public static Order showOrdersCustomer(int customerID){
-        return orderRepo.orderOfCustomer(customerID);
+    //show last order of a customer
+    public static Order lastCustomerOrder(int customerID){
+        Order order= orderRepo.orderOfCustomer(customerID);
+        if (order==null){
+            throw new NoOrders();
+        }
+        return order;
     }
 
+
+    //show orders of a customer
+    public static List<Order> customerOrders(int customerID){
+
+            List<Order> orderList;
+            orderList=orderRepo.ordersOfCustomer(customerID);
+            if (orderList.size()==0){
+                throw new NoOrders();
+            }
+            return orderList;
+    }
+
+
+
+    //show total price of an order
+    public static int totalOrderPrice(int orderID){
+        return orderRepo.totalOrderPrice(orderID);
+    }
 }

@@ -72,7 +72,7 @@ public class CustomerRepo  {
 
     //show info of a customer
     public Customer showInfo(String username){
-        String showInfo="select * from customer where username=?";
+        String showInfo="select * from customer where username=(?)";
 
         Customer customer=new Customer();
         try {
@@ -97,6 +97,43 @@ public class CustomerRepo  {
             e.printStackTrace();
         }
         return customer;
+    }
+
+
+
+    //recharge balance
+    public boolean rechargeBalance(int amount,int customerID){
+        String rechargeBalance="update customer set balance=balance+(?) where id=?";
+
+        int rechargeCheck=0;
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(rechargeBalance);
+            preparedStatement.setInt(1,amount);
+            preparedStatement.setInt(2,customerID);
+
+            rechargeCheck=preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rechargeCheck>0;
+    }
+
+
+    //deduct from balance
+    public boolean deductBalance(int amount,int customerID){
+        String deductBalance="update customer set balance=balance-(?) where id=?";
+
+        int deductCheck=0;
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(deductBalance);
+            preparedStatement.setInt(1,amount);
+            preparedStatement.setInt(2,customerID);
+
+            deductCheck=preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return deductCheck>0;
     }
 
 }

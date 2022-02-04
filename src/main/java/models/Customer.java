@@ -1,11 +1,13 @@
 package models;
 
+import java.util.List;
+
 public class Customer extends User {
 
     private String address;
     private String phoneNumber;
     private String nationalCode;
-    private Order[] orders;
+    private List<Order> orderList;
     private double balance;
 
 
@@ -47,14 +49,17 @@ public class Customer extends User {
         this.nationalCode = nationalCode;
     }
 
-    public Order[] getOrders() {
-        return orders;
+    public List<Order> getOrderList() {
+        return orderList;
     }
 
-    public void setOrders(Order[] orders) {
-        this.orders = orders;
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 
+    public void addToOrders(Order order){
+        this.orderList.add(order);
+    }
 
     public double getBalance() {
         return balance;
@@ -62,5 +67,9 @@ public class Customer extends User {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public Order lastOrder(){
+        return orderList.get(-1);
     }
 }

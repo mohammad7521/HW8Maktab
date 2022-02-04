@@ -1,9 +1,11 @@
 package models;
 
-public class SelectedProduct extends Models {
+import services.ProductServices;
+
+public class KartItem extends Models {
 
     private int id;
-    private Product product;
+    private Product product=new Product();
     private int selectedQuantity;
 
 
@@ -29,5 +31,19 @@ public class SelectedProduct extends Models {
 
     public void setSelectedQuantity(int selectedQuantity) {
         this.selectedQuantity = selectedQuantity;
+    }
+
+    public void setProductID(int productID){
+        this.product.setId(productID);
+    }
+
+    public int getProductID(){
+        return this.product.getId();
+    }
+
+    @Override
+    public String toString() {
+        return "\nproduct:" + ProductServices.showInfo(product.getId()).getName() +
+                ", selectedQuantity:" + selectedQuantity;
     }
 }

@@ -1,11 +1,10 @@
 package models;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Order extends Models {
     private int id;
-    private SelectedProduct[] selectedProducts;
+    private KartItem[] kartItems;
     private Timestamp dateOrder;
     private boolean isPaid;
 
@@ -18,12 +17,12 @@ public class Order extends Models {
         this.id = id;
     }
 
-    public SelectedProduct[] getSelectedProducts() {
-        return selectedProducts;
+    public KartItem[] getSelectedProducts() {
+        return kartItems;
     }
 
-    public void setSelectedProducts(SelectedProduct[] selectedProducts) {
-        this.selectedProducts = selectedProducts;
+    public void setSelectedProducts(KartItem[] kartItems) {
+        this.kartItems = kartItems;
     }
 
     public Timestamp getDateOrder() {

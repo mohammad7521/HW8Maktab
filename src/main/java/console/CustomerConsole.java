@@ -2,7 +2,10 @@ package console;
 
 
 import exceptionHandlers.DuplicateUser;
+import exceptionHandlers.NoOrders;
+import exceptionHandlers.UserNotFound;
 import models.Customer;
+import models.KartItem;
 import models.Order;
 import models.Product;
 import services.CustomerServices;
@@ -61,7 +64,7 @@ public class CustomerConsole {
                                 break;
                             } else System.out.println("password is wrong! ");
                             break;
-                        }catch (NullPointerException e){
+                        }catch (UserNotFound e){
                             System.out.println("username does not exist! ");
                         }
                     case 0:
@@ -78,30 +81,44 @@ public class CustomerConsole {
     // customer main menu
     public static void customerMainMenu(String username) {
 
+
         while (true) {
-            System.out.println("1-show all products: ");
-            System.out.println("2-show shopping kart: ");
+            try {
+                Customer customer = CustomerServices.showInfo(username);
+                int orderID;
+                Order order=new Order();
+                orderID=order.getId();
+            System.out.println("1-recharge balance: ");
+            System.out.println("2-show all products: ");
+            System.out.println("3-show shopping kart: ");
+
             System.out.println("0-Log out");
 
             Scanner scanner = new Scanner(System.in);
-            try {
-                Customer customer = CustomerServices.showInfo(username);
+
+
                 int userEntry = scanner.nextInt();
                 switch (userEntry) {
+
                     case 1:
+                        System.out.println("enter amount");
+                        int amount=scanner.nextInt();
+                        if(CustomerServices.recharge(amount,customer.getId())){
+                            System.out.println("recharge successful!");
+                            System.out.println();
+                            break;
+                        }
+                        else System.out.println("something went wrong try again!");
+                        System.out.println();
+                        break;
+                    case 2:
                         List<Product> productList=ProductServices.showAll();
 
                         for(Product product:productList){
                             System.out.println(product.toString());
                         }
-                        int orderID;
-                        System.out.println("enter the product id:");
-                        if(OrderServices.showOrdersCustomer(customer.getId())==null) {
-                            orderID=OrderServices.add(customer.getId());
-                        }else {
-                            orderID=OrderServices.showOrdersCustomer(customer.getId()).getId();
-                        }
 
+                        System.out.println("enter the product id:");
                         int productID=scanner.nextInt();
                         System.out.println("enter quantity: ");
                         int quantity=scanner.nextInt();
@@ -117,10 +134,31 @@ public class CustomerConsole {
                         }
 
                         break;
+
+                    case 3:
+                        orderID=OrderServices.lastCustomerOrder(customer.getId()).getId();
+                    List<KartItem> kartItemList=KartItemServices.showKartItems(orderID);
+
+                    for (KartItem k:kartItemList){
+                        System.out.println(k.toString());
+                        System.out.println();
+                        System.out.println("total price:");
+                        int totalOrderPrice=OrderServices.totalOrderPrice(OrderServices.lastCustomerOrder(customer.getId()).getId());
+                        System.out.println(totalOrderPrice);
+                        System.out.println("finalize (Y/N)");
+                        char finalize=scanner.next().charAt(0);
+                        if (finalize=='y' || finalize=='Y'){
+                            if(CustomerServices.deduct(totalOrderPrice,customer.getId())&&
+                            OrderServices.finalize(orderID,true )){
+                                System.out.println("congratulations!");
+                                System.out.println("your order will be delivered soon!");
+                            }
+                        }
+                    }
                 }
-            } catch (InputMismatchException e) {
+            }catch (InputMismatchException e) {
                 System.out.println("pleas enter a valid number");
-            }
+        }
         }
     }
 }

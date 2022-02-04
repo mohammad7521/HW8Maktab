@@ -1,10 +1,13 @@
 package repositories;
 
 import connection.ConnectionProvider;
-import models.Customer;
+import models.KartItem;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KartItemRepo {
 
@@ -53,5 +56,30 @@ public class KartItemRepo {
 
         }
         return removeCheck > 0;
+    }
+
+
+    //show shopping kart of a customer
+    public List<KartItem> showKartOfCustomer(int orderID){
+        String showKart="select * from kartitems where orderID=?";
+
+        List<KartItem> kartItemList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showKart);
+            preparedStatement.setInt(1,orderID);
+
+            ResultSet resultSet=preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                KartItem kartItem=new KartItem();
+                kartItem.setId(resultSet.getInt(1));
+                kartItem.setProductID(resultSet.getInt(2));
+                kartItem.setSelectedQuantity(resultSet.getInt(3));
+                kartItemList.add(kartItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return kartItemList;
     }
 }
