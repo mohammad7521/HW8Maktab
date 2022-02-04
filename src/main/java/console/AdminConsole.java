@@ -20,8 +20,7 @@ public class AdminConsole {
         while (flag) {
             System.out.println();
             System.out.println("1-product management");
-            System.out.println("2-user management");
-            System.out.println("3-category management");
+            System.out.println("2-category management");
             System.out.println("0-exit");
 
             Scanner scanner = new Scanner(System.in);
@@ -33,11 +32,7 @@ public class AdminConsole {
                         productManagement();
                         break;
 
-//                    case 2:
-//                        userManagement();
-//                        break;
-
-                    case 3:
+                    case 2:
                         categoryManagement();
                         break;
 

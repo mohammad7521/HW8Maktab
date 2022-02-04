@@ -2,6 +2,7 @@ package repositories.categories;
 
 import connection.ConnectionProvider;
 import models.Category;
+import models.Product;
 import services.categories.ParentCategoryServices;
 
 import java.sql.PreparedStatement;
@@ -181,5 +182,33 @@ public class ChildCategoryRepo {
             e.printStackTrace();
         }
         return addProductCheck>0;
+    }
+
+
+
+
+    //show products of a category
+    public List<Product> showProducts(int categoryID){
+
+        List<Product> productList=new ArrayList<>();
+        String showProducts="\n" +
+                "select productID,p.name,price from childCategory inner join product p on childCategory.productID = p.id\n" +
+                "where childCategory.id=?";
+        try {
+            PreparedStatement preparedStatement=ConnectionProvider.setConnection().prepareStatement(showProducts);
+            preparedStatement.setInt(1,categoryID);
+            ResultSet resultSet=preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                Product product=new Product();
+                product.setId(resultSet.getInt(1));
+                product.setName(resultSet.getString(2));
+                product.setPrice(resultSet.getDouble(3));
+                productList.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productList;
     }
 }

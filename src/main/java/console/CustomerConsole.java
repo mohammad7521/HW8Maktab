@@ -4,14 +4,13 @@ package console;
 import exceptionHandlers.DuplicateUser;
 import exceptionHandlers.NoOrders;
 import exceptionHandlers.UserNotFound;
-import models.Customer;
-import models.KartItem;
-import models.Order;
-import models.Product;
+import models.*;
 import services.CustomerServices;
 import services.KartItemServices;
 import services.OrderServices;
 import services.ProductServices;
+import services.categories.ChildCategoryServices;
+import services.categories.ParentCategoryServices;
 
 import java.sql.Array;
 import java.sql.Date;
@@ -90,7 +89,8 @@ public class CustomerConsole {
                 orderID=order.getId();
             System.out.println("1-recharge balance: ");
             System.out.println("2-show all products: ");
-            System.out.println("3-show shopping kart: ");
+            System.out.println("3-show categories: ");
+            System.out.println("4-show shopping kart: ");
 
             System.out.println("0-Log out");
 
@@ -136,6 +136,46 @@ public class CustomerConsole {
                         break;
 
                     case 3:
+                        System.out.println("select category by ID:");
+                        List<Category> parentCategories=ParentCategoryServices.showAll();
+
+                        for (Category p:parentCategories){
+                            System.out.println(p.toString());
+                        }
+
+                        int selectedParent=scanner.nextInt();
+
+                        List<Category> childCategories=ChildCategoryServices.showCategoriesOfParent(selectedParent);
+
+                        for (Category c:childCategories){
+                            System.out.println(c.toString());
+                        }
+
+                        System.out.println("select category: ");
+                        int selectedChild=scanner.nextInt();
+
+                        productList=ChildCategoryServices.showProducts(selectedChild);
+
+                        for (Product p:productList){
+                            System.out.println(p.toString());
+                        }
+
+
+                        System.out.println("enter the product id:");
+                        productID=scanner.nextInt();
+                        System.out.println("enter quantity: ");
+                        quantity=scanner.nextInt();
+
+                        if (ProductServices.showInfo(productID).getQuantity()>=quantity){
+                            if (KartItemServices.add(productID,orderID,quantity) && ProductServices.deduct(productID,quantity)){
+                                System.out.println("item has been added to your shopping kart! ");
+                                break;
+                            }
+
+                        }else {
+                            System.out.println("out of stock! ");
+                        }
+                    case 4:
                         orderID=OrderServices.lastCustomerOrder(customer.getId()).getId();
                     List<KartItem> kartItemList=KartItemServices.showKartItems(orderID);
 

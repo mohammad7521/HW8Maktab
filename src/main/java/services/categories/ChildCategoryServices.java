@@ -1,6 +1,7 @@
 package services.categories;
 
 import models.Category;
+import models.Product;
 import repositories.categories.ChildCategoryRepo;
 
 import java.util.List;
@@ -44,6 +45,12 @@ public class ChildCategoryServices {
     //show categories of a parent category
     public static List<Category> showCategoriesOfParent(int parentCategoryID){
         return childCategoryRepo.showCategoriesOfParent(parentCategoryID);
+    }
+
+
+    //show products of a category
+    public static List<Product> showProducts(int categoryID){
+        return childCategoryRepo.showProducts(categoryID);
     }
 }
 
